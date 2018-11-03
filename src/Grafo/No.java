@@ -6,8 +6,8 @@ import java.util.Collections;
 public class No<E> {
 
     ArrayList<Conexao<E>> ligadoA;
-    E valor;
-    int grauDeEntrada;
+    public E valor;
+    public int grauDeEntrada;
     boolean visitado;
 
     public No(E valor) {
@@ -17,10 +17,12 @@ public class No<E> {
     }
 
     public void conectarA(No<E> no) {
+        no.grauDeEntrada++;
         ligadoA.add(new Conexao<E>(no));
     }
 
     public void conectarEspelho(No<E> no) {
+        no.grauDeEntrada++;
         conectarA(no);
         no.conectarA(this);
     }

@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 public class Grafo<E> {
 
-    ArrayList<No<E>> nos;
+    public ArrayList<No<E>> nos;
 
     public class CaminhoDijkstra {
 
@@ -156,19 +156,21 @@ public class Grafo<E> {
 
     public ArrayList<No> ordenacaoTopologica() {
         ArrayList<No> lista = new ArrayList<>();
-
         boolean existeNaoVisitado = true;
         while (existeNaoVisitado) {
             existeNaoVisitado = false;
             for (No<E> no : nos) {
-                if (no.grauDeEntrada == 0) {
+                
+                if (no.grauDeEntrada == 0 && !no.visitado) {
                     existeNaoVisitado = true;
+                    no.visitado = true;
                     lista.add(no);
                     for (Conexao<E> conexao : no.ligadoA) {
                         conexao.no.grauDeEntrada--;
                     }
+                    break;
                 }
-                break;
+               
             }
         }
 
