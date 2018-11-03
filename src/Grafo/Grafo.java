@@ -3,10 +3,12 @@ package Grafo;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class Grafo <E> {
+public class Grafo<E> {
+
     ArrayList<No<E>> nos;
-    
+
     public class CaminhoDijkstra {
+
         No<E> no;
         No<E> caminho;
         double valor;
@@ -18,65 +20,72 @@ public class Grafo <E> {
             this.valor = valor;
             this.completo = completo;
         }
-        
-        
+
     }
 
-    Grafo() {
+    public Grafo() {
         nos = new ArrayList<>();
     }
 
-    No<E> inserirNo(No<E> no) {
+    public No<E> inserirNo(No<E> no) {
         nos.add(no);
         return no;
     }
-    void conectar(No<E> noA, No<E> noB) {
+
+    public void conectar(No<E> noA, No<E> noB) {
         noA.conectarA(noB);
     }
-    void conectarEspelho(No<E> noA, No<E> noB) {
+
+    public void conectarEspelho(No<E> noA, No<E> noB) {
         noA.conectarEspelho(noB);
     }
-    void conectar(No<E> noA, No<E> noB, double valor) {
+
+    public void conectar(No<E> noA, No<E> noB, double valor) {
         noA.conectarA(noB, valor);
     }
-    void conectarEspelho(No<E> noA, No<E> noB, double valor) {
+
+    public void conectarEspelho(No<E> noA, No<E> noB, double valor) {
         noA.conectarEspelho(noB, valor);
     }
-    void remover(No<E> no) {
+
+    public void remover(No<E> no) {
         nos.remove(no);
-        for (No<E> n: nos) {
+        for (No<E> n : nos) {
             n.remover(no);
         }
     }
-    int regular() {
+
+    public int regular() {
         int t = -1;
         if (nos.size() == 0) {
             return t;
-        }else {
+        } else {
             t = nos.get(0).ligadoA.size();
         }
 
-        for (No<E> no: nos) {
+        for (No<E> no : nos) {
             if (no.ligadoA.size() != t) {
                 return -1;
             }
         }
         return t;
     }
-    boolean completo() {
+
+    public boolean completo() {
         int t = nos.size() - 1;
-        for (No<E> no: nos) {
+        for (No<E> no : nos) {
             if (no.ligadoA.size() < t) {
                 return false;
             }
         }
         return true;
     }
-    ArrayList<No<E>> buscaLargura(No<E> no) {
+
+    public ArrayList<No<E>> buscaLargura(No<E> no) {
         ArrayList<No<E>> retorno = new ArrayList<>();
         LinkedList<No<E>> fila = new LinkedList<>();
 
-        for (No<E> n: nos) {
+        for (No<E> n : nos) {
             n.visitado = false;
         }
         fila.add(no);
@@ -87,7 +96,7 @@ public class Grafo <E> {
         while (fila.size() > 0) {
             No<E> novo = fila.getLast();
             fila.removeLast();
-            for (Conexao<E> n: novo.ligadoA) {
+            for (Conexao<E> n : novo.ligadoA) {
                 if (!n.no.visitado) {
                     n.no.visitado = true;
                     fila.addFirst(n.no);
@@ -98,17 +107,19 @@ public class Grafo <E> {
 
         return retorno;
     }
-    boolean conexo(No<E> no) {
+
+    public boolean conexo(No<E> no) {
         if (nos.size() > 0) {
             return buscaLargura(no).size() == nos.size();
         }
         return false;
     }
-    ArrayList<CaminhoDijkstra> dijkstraCompleto() {
+
+    public ArrayList<CaminhoDijkstra> dijkstraCompleto() {
         ArrayList<CaminhoDijkstra> tabela = new ArrayList();
         if (nos.size() > 0) {
             tabela.add(new CaminhoDijkstra(nos.get(0), nos.get(0), 0, false));
-            for (int i = 1; i<nos.size(); i++) {
+            for (int i = 1; i < nos.size(); i++) {
                 tabela.add(new CaminhoDijkstra(nos.get(i), null, Double.MAX_VALUE, false));
             }
 
@@ -118,7 +129,7 @@ public class Grafo <E> {
                 completo = true;
                 double menorValor = Double.MAX_VALUE;
                 int posicaoMenor = 0;
-                for (int i = 0; i<tabela.size(); i++) {
+                for (int i = 0; i < tabela.size(); i++) {
                     if (!tabela.get(i).completo && tabela.get(i).valor < menorValor) {
                         posicaoMenor = i;
                         menorValor = tabela.get(i).valor;
@@ -128,20 +139,43 @@ public class Grafo <E> {
 
                 tabela.get(posicaoMenor).completo = true;
 
-
-                for (Conexao<E> conexao: tabela.get(posicaoMenor).no.ligadoA) { 
+                for (Conexao<E> conexao : tabela.get(posicaoMenor).no.ligadoA) {
                     for (CaminhoDijkstra cam : tabela) {
                         if (cam.no == conexao.no) {
                             if (tabela.get(posicaoMenor).valor + conexao.valor < cam.valor) {
-                                cam.valor = tabela.get(posicaoMenor).valor+conexao.valor;
+                                cam.valor = tabela.get(posicaoMenor).valor + conexao.valor;
                                 cam.caminho = tabela.get(posicaoMenor).no;
                             }
                         }
                     }
-                }  
-            }  
+                }
+            }
         }
         return tabela;
     }
-   
+
+    public ArrayList<No> ordenacaoTopologica() {
+        ArrayList<No> lista = new ArrayList<>();
+
+        boolean existeNaoVisitado = true;
+        while (existeNaoVisitado) {
+            existeNaoVisitado = false;
+            for (No<E> no : nos) {
+                if (no.grauDeEntrada == 0) {
+                    existeNaoVisitado = true;
+                    lista.add(no);
+                    for (Conexao<E> conexao : no.ligadoA) {
+                        conexao.no.grauDeEntrada--;
+                    }
+                }
+                break;
+            }
+        }
+
+        for (No<E> no : nos) {
+            no.resetarGrau();
+        }
+        
+        return lista;
+    }
 }
