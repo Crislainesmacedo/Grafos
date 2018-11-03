@@ -10,27 +10,27 @@ public class No<E> {
     int grauDeEntrada;
     boolean visitado;
 
-    No(E valor) {
+    public No(E valor) {
         ligadoA = new ArrayList<>();
         this.valor = valor;
         this.grauDeEntrada = 0;
     }
 
-    void conectarA(No<E> no) {
+    public void conectarA(No<E> no) {
         ligadoA.add(new Conexao<E>(no));
     }
 
-    void conectarEspelho(No<E> no) {
+    public void conectarEspelho(No<E> no) {
         conectarA(no);
         no.conectarA(this);
     }
 
-    void conectarA(No<E> no, double valor) {
+    public void conectarA(No<E> no, double valor) {
         no.grauDeEntrada++;
         ligadoA.add(new Conexao<E>(no, valor));
     }
 
-    void conectarEspelho(No<E> no, double valor) {
+    public void conectarEspelho(No<E> no, double valor) {
         grauDeEntrada++;
         no.grauDeEntrada++;
         conectarA(no, valor);
@@ -41,7 +41,7 @@ public class No<E> {
         grauDeEntrada = ligadoA.size();
     }
 
-    void remover(No<E> no) {
+    public void remover(No<E> no) {
         ligadoA.removeAll(Collections.singleton(new Conexao<E>(no)));
     }
 }
