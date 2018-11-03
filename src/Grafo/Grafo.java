@@ -1,6 +1,8 @@
 package Grafo;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.LinkedList;
 
 public class Grafo<E> {
@@ -60,11 +62,11 @@ public class Grafo<E> {
         if (nos.size() == 0) {
             return t;
         } else {
-            t = nos.get(0).ligadoA.size();
+            t = nos.get(0).saida.size();
         }
 
         for (No<E> no : nos) {
-            if (no.ligadoA.size() != t) {
+            if (no.saida.size() != t) {
                 return -1;
             }
         }
@@ -74,7 +76,7 @@ public class Grafo<E> {
     public boolean completo() {
         int t = nos.size() - 1;
         for (No<E> no : nos) {
-            if (no.ligadoA.size() < t) {
+            if (no.saida.size() < t) {
                 return false;
             }
         }
@@ -96,7 +98,7 @@ public class Grafo<E> {
         while (fila.size() > 0) {
             No<E> novo = fila.getLast();
             fila.removeLast();
-            for (Conexao<E> n : novo.ligadoA) {
+            for (Conexao<E> n : novo.saida) {
                 if (!n.no.visitado) {
                     n.no.visitado = true;
                     fila.addFirst(n.no);
@@ -139,7 +141,7 @@ public class Grafo<E> {
 
                 tabela.get(posicaoMenor).completo = true;
 
-                for (Conexao<E> conexao : tabela.get(posicaoMenor).no.ligadoA) {
+                for (Conexao<E> conexao : tabela.get(posicaoMenor).no.saida) {
                     for (CaminhoDijkstra cam : tabela) {
                         if (cam.no == conexao.no) {
                             if (tabela.get(posicaoMenor).valor + conexao.valor < cam.valor) {
@@ -165,7 +167,7 @@ public class Grafo<E> {
                     existeNaoVisitado = true;
                     no.visitado = true;
                     lista.add(no);
-                    for (Conexao<E> conexao : no.ligadoA) {
+                    for (Conexao<E> conexao : no.saida) {
                         conexao.no.grauDeEntrada--;
                     }
                     break;
@@ -179,5 +181,77 @@ public class Grafo<E> {
         }
         
         return lista;
+    }
+    
+    public ArrayList<ArrayList<No<E>>> fortementeConexos() {
+        if (nos.size() > 0) {
+            //Busca em Profundidade 1
+            Deque<No<E>> pilha = new ArrayDeque<>();
+            Deque<No<E>> posOrdem = new ArrayDeque<>();
+            
+            for (No<E> n : nos) {
+                n.visitado = false;
+            }
+
+            No<E> no = nos.get(0);
+
+            pilha.add(no);
+            posOrdem.add(no);
+
+            no.visitado = true;
+
+            while (pilha.size() > 0) {
+                no = pilha.pop();
+                for (Conexao<E> conexao : no.saida) {
+                    if (!conexao.no.visitado) {
+                        conexao.no.visitado = true;
+                        pilha.push(conexao.no);
+                        posOrdem.push(conexao.no);
+                    }
+                }
+            }
+            
+            //Busca em Profundidade 2
+            for (No<E> n : nos) {
+                n.visitado = false;
+            }
+            
+            ArrayList<ArrayList<No<E>>> componentes = new ArrayList<>();
+            while (posOrdem.size() > 0) {
+               
+                while (posOrdem.peek().visitado) {
+                    posOrdem.pop();
+                    if (posOrdem.peek() == null) {
+                        break;
+                    }
+                }
+                if (posOrdem.size() > 0) {
+                    ArrayList<No<E>> subgrafo = new ArrayList<>();
+                    no = posOrdem.pop();
+                    subgrafo.add(no);
+                    pilha.add(no);
+
+                    no.visitado = true;
+
+                    while (pilha.size() > 0) {
+                        no = pilha.pop();
+                        for (Conexao<E> conexao : no.saida) {
+                          
+                            if (!conexao.no.visitado) {
+                                conexao.no.visitado = true;
+                                pilha.push(conexao.no);
+                                subgrafo.add(conexao.no);
+                            }
+                        }
+                    }
+                    componentes.add(subgrafo);
+                }
+            }
+
+            return componentes;
+        }
+
+        return null;
+        
     }
 }
