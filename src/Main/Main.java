@@ -22,7 +22,7 @@ public class Main {
         grafo.conectarEspelho(D, A);
         grafo.conectarEspelho(E, A);
         
-        ArrayList<No> nos = grafo.ordenacaoTopologica();
+        ArrayList<No<String>> nos = grafo.ordenacaoTopologica();
         
         ArrayList<No<String>> cmpn = grafo.articulacoes();
         
