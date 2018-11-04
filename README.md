@@ -121,7 +121,7 @@ ArrayList<No<Tipo>> articulacoes = grafo.articulacoes();
 ```
 Retorna um *ArrayList* de nós articulações no grafo.
 
-####Classe No:
+#### Classe No:
 ```Java
 No<Tipo> no = grafo.inserirNo(Tipo valor);
 ```
