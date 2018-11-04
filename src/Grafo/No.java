@@ -19,28 +19,28 @@ public class No<E> {
         this.grauDeSaida = 0;
     }
 
-    public void conectarA(No<E> no) {
+    void conectarA(No<E> no) {
         grauDeSaida++;
         no.grauDeEntrada++;
         saida.add(new Conexao<>(no));
         no.entrada.add(new Conexao<>(this));
     }
 
-    public void conectarEspelho(No<E> no) {
+    void conectarEspelho(No<E> no) {
         grauDeSaida++;
         no.grauDeEntrada++;
         conectarA(no);
         no.conectarA(this);
     }
 
-    public void conectarA(No<E> no, double valor) {
+    void conectarA(No<E> no, double valor) {
         grauDeSaida++;
         no.grauDeEntrada++;
         saida.add(new Conexao<>(no, valor));
         no.entrada.add(new Conexao<>(this, valor));
     }
 
-    public void conectarEspelho(No<E> no, double valor) {
+    void conectarEspelho(No<E> no, double valor) {
         grauDeSaida++;
         no.grauDeEntrada++;
         conectarA(no, valor);

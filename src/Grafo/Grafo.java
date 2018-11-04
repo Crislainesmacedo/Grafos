@@ -29,7 +29,8 @@ public class Grafo<E> {
         nos = new ArrayList<>();
     }
 
-    public No<E> inserirNo(No<E> no) {
+    public No<E> inserirNo(E valor) {
+        No<E> no = new No<E>(valor);
         nos.add(no);
         return no;
     }
@@ -172,7 +173,6 @@ public class Grafo<E> {
                     }
                     break;
                 }
-               
             }
         }
 
@@ -213,27 +213,30 @@ public class Grafo<E> {
             
             //Busca em Profundidade 2
             for (No<E> n : nos) {
-                n.visitado = false;
+                if (!n.visitado) {
+                    posOrdem.addLast(n);
+                }else {
+                    n.visitado = false;
+                }
             }
             
             ArrayList<ArrayList<No<E>>> componentes = new ArrayList<>();
-            while (posOrdem.size() > 0) {
+            while (!posOrdem.isEmpty()) {
                
                 while (posOrdem.peek().visitado) {
                     posOrdem.pop();
-                    if (posOrdem.peek() == null) {
+                    if (posOrdem.isEmpty()) {
                         break;
                     }
                 }
-                if (posOrdem.size() > 0) {
+                if (!posOrdem.isEmpty()) {
                     ArrayList<No<E>> subgrafo = new ArrayList<>();
                     no = posOrdem.pop();
                     subgrafo.add(no);
                     pilha.add(no);
-
                     no.visitado = true;
 
-                    while (pilha.size() > 0) {
+                    while (!pilha.isEmpty()) {
                         no = pilha.pop();
                         for (Conexao<E> conexao : no.saida) {
                           
@@ -251,7 +254,50 @@ public class Grafo<E> {
             return componentes;
         }
 
+        return null; 
+    }
+    
+    public ArrayList<No<E>> articulacoes () {
+        if (nos.size() > 0 && conexo(nos.get(0))) {
+            LinkedList<No<E>> fila = new LinkedList<>();
+            ArrayList<No<E>> retorno = new ArrayList<>();
+
+            for (No<E> no: nos) {
+                ArrayList<No<E>> encontrados = new ArrayList<>();
+                for (No<E> n : nos) {
+                    n.visitado = false;
+                }
+                no.visitado = true;
+
+                if (no == nos.get(0)) {
+                    fila.addFirst(nos.get(1));
+                    nos.get(1).visitado = true;
+                    encontrados.add(nos.get(1));
+                }else {
+                    fila.addFirst(nos.get(0));
+                    nos.get(0).visitado = true;
+                    encontrados.add(nos.get(0));
+                }
+
+                while (fila.size() > 0) {
+                    No<E> novo = fila.getLast();
+                    fila.removeLast();
+                    for (Conexao<E> n : novo.saida) {
+                        if (!n.no.visitado) {
+                            n.no.visitado = true;
+                            encontrados.add(no);
+                            fila.addFirst(n.no);
+                        }
+                    }
+                }
+
+                if (encontrados.size() < nos.size()-1) {
+                    retorno.add(no);
+                }
+            }
+
+            return retorno;
+        }
         return null;
-        
     }
 }

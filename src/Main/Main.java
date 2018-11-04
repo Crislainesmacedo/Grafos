@@ -8,31 +8,28 @@ public class Main {
     public static void main(String[] args) {
         Grafo<String> grafo = new Grafo<>();
         
-        No<String> A = new No<>("A");
-        No<String> B = new No<>("B");
-        No<String> C = new No<>("C");
+
         
-        grafo.inserirNo(A);
-        grafo.inserirNo(B);
-        grafo.inserirNo(C);
+        No<String> A = grafo.inserirNo("A");
+        No<String> B = grafo.inserirNo("B");
+        No<String> C = grafo.inserirNo("C");
+        No<String> D = grafo.inserirNo("D");
+        No<String> E = grafo.inserirNo("E");
         
-        A.conectarA(B);
-        B.conectarA(A);
-        C.conectarA(A);
+        grafo.conectarEspelho(A, B);
+        grafo.conectarEspelho(B, C);
+        grafo.conectarEspelho(C, D);
+        grafo.conectarEspelho(D, A);
+        grafo.conectarEspelho(E, A);
         
         ArrayList<No> nos = grafo.ordenacaoTopologica();
         
-        for (No<String> no: nos) {
+        ArrayList<No<String>> cmpn = grafo.articulacoes();
+        
+
+        System.out.println("Articulações:");
+        for (No<String> no: cmpn) {
             System.out.println(no.getValor());
-        }
-        
-        ArrayList<ArrayList<No<String>>> cmpn = grafo.fortementeConexos();
-        
-        for (ArrayList<No<String>> lista: cmpn) {
-            System.out.println("Lista:");
-            for (No<String> no: lista) {
-                System.out.println(no.getValor());
-            }
         }
     }
 }
