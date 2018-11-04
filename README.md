@@ -50,23 +50,64 @@ Note que para conexão deste exemplo foi gerada uma conexão, mesmo já houvendo
  
 #### Classe Grafo:
 ```Java
-new Grafo<Tipo>();
+Grafo<Tipo> grafo = new Grafo<>();
 ```
 Cria um grafo de um tipo *Tipo*.
 
 ```Java
-inserirNo(Tipo valor);
+grafo.inserirNo(Tipo valor);
 ```
 Insere um novo nó ao grafo.
 
 ```Java
-conectar(No<Tipo> A, No<Tipo> B [, double valor]);
+grafo.conectar(No<Tipo> A, No<Tipo> B [, double valor]);
 ```
 Conecta um nó *A* a um nó *B* com um valor opcional.
 
 ```Java
-conectarEspelho(No<Tipo> A, No<Tipo> B [, double valor]);
+grafo.conectarEspelho(No<Tipo> A, No<Tipo> B [, double valor]);
 ```
 O mesmo que o anterior, porém conecta também de *B* a *A*.
+
+```Java
+grafo.remover(No<Tipo> A);
+```
+Remove um nó *A* do grafo.
+
+```Java
+int regularidade = grafo.regular();
+```
+Determina se o grafo é k-regular. Retorna o número de regularidade caso seja, caso contrário retorna -1.
+
+```Java
+boolean completo = grafo.completo();
+```
+Determina se o grafo é completo. Caso positivo retorna *true*, *false* em caso contrário.
+
+```Java
+ArrayList<No<Tipo>> lista = grafo.buscaLargura(No<E> A) {
+```
+Efetua uma busca em largura a partir de um nó *A* retornando um *ArrayList* de nós encontrados.
+
+```Java
+boolean conexo = grafo.conexo(No<E> no);
+```
+Determina se um grafo é conexo a partir de um ponto.
+
+```Java
+ArrayList<CaminhoDijkstra> tabela = grafo.dijkstraCompleto();
+```
+Gera um *ArrayList* de *CaminhoDijkstra* a partir do primeiro nó inserido.
+Um *CaminhoDijkstra* é composto por:
+```Java
+No<E> no;
+No<E> caminho;
+double valor;
+boolean completo;
+```
+
+```Java
+ArrayList<No<Tipo> ordenacao = grafo.ordenacaoTopologica();
+```
 
 
