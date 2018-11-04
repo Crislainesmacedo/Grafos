@@ -55,7 +55,7 @@ Grafo<Tipo> grafo = new Grafo<>();
 Cria um grafo de um tipo *Tipo*.
 
 ```Java
-grafo.inserirNo(Tipo valor);
+No<Tipo> no = grafo.inserirNo(Tipo valor);
 ```
 Insere um novo nó ao grafo.
 
@@ -97,7 +97,7 @@ Determina se um grafo é conexo a partir de um ponto.
 ```Java
 ArrayList<CaminhoDijkstra> tabela = grafo.dijkstraCompleto();
 ```
-Gera um *ArrayList* de *CaminhoDijkstra* a partir do primeiro nó inserido.
+Retorna um *ArrayList* de *CaminhoDijkstra* a partir do primeiro nó inserido.
 Um *CaminhoDijkstra* é composto por:
 ```Java
 No<E> no;
@@ -107,7 +107,33 @@ boolean completo;
 ```
 
 ```Java
-ArrayList<No<Tipo> ordenacao = grafo.ordenacaoTopologica();
+ArrayList<No<Tipo>> ordenacao = grafo.ordenacaoTopologica();
 ```
+Retorna um *ArrayList* de nós na ordem de uma ordenação topológica. Ciclos não são adicionados a lista.
 
+```Java
+ArrayList<ArrayList<No<E>>> fortementeConexo = grafo.fortementeConexos();
+```
+Retorna um *ArrayList* de *ArrayList* de nós como componentes de subgrafos fortemente conexos.
+
+```Java
+ArrayList<No<Tipo>> articulacoes = grafo.articulacoes();
+```
+Retorna um *ArrayList* de nós articulações no grafo.
+
+####Classe No:
+```Java
+No<Tipo> no = grafo.inserirNo(Tipo valor);
+```
+Insere um novo nó ao grafo.
+
+```Java
+no.setValor(Tipo valor);
+```
+Altera o valor de um nó.
+
+```Java
+Tipo valor = no.getValor();
+```
+Retorna o valor de um nó.
 
