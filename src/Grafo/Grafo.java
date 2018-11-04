@@ -157,8 +157,8 @@ public class Grafo<E> {
         return tabela;
     }
 
-    public ArrayList<No> ordenacaoTopologica() {
-        ArrayList<No> lista = new ArrayList<>();
+    public ArrayList<No<E>> ordenacaoTopologica() {
+        ArrayList<No<E>> lista = new ArrayList<>();
         boolean existeNaoVisitado = true;
         while (existeNaoVisitado) {
             existeNaoVisitado = false;
