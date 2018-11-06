@@ -1,9 +1,11 @@
 package Grafo;
 
+import com.sun.jmx.remote.internal.ArrayQueue;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class Grafo<E> {
 
@@ -187,7 +189,7 @@ public class Grafo<E> {
         if (nos.size() > 0) {
             //Busca em Profundidade 1
             Deque<No<E>> pilha = new ArrayDeque<>();
-            Deque<No<E>> posOrdem = new ArrayDeque<>();
+            LinkedList<No<E>> posOrdem = new LinkedList<>();
             
             for (No<E> n : nos) {
                 n.visitado = false;
@@ -196,17 +198,17 @@ public class Grafo<E> {
             No<E> no = nos.get(0);
 
             pilha.add(no);
-            posOrdem.add(no);
 
             no.visitado = true;
 
             while (pilha.size() > 0) {
                 no = pilha.pop();
+                posOrdem.add(no);
                 for (Conexao<E> conexao : no.saida) {
                     if (!conexao.no.visitado) {
                         conexao.no.visitado = true;
                         pilha.push(conexao.no);
-                        posOrdem.push(conexao.no);
+                        
                     }
                 }
             }
@@ -214,31 +216,35 @@ public class Grafo<E> {
             //Busca em Profundidade 2
             for (No<E> n : nos) {
                 if (!n.visitado) {
-                    posOrdem.addLast(n);
+                    posOrdem.add(n);
                 }else {
                     n.visitado = false;
                 }
+            }
+            
+            for (No<E> a: posOrdem) {
+                System.out.println(a.getValor());
             }
             
             ArrayList<ArrayList<No<E>>> componentes = new ArrayList<>();
             while (!posOrdem.isEmpty()) {
                
                 while (posOrdem.peek().visitado) {
-                    posOrdem.pop();
+                    posOrdem.poll();
                     if (posOrdem.isEmpty()) {
                         break;
                     }
                 }
                 if (!posOrdem.isEmpty()) {
                     ArrayList<No<E>> subgrafo = new ArrayList<>();
-                    no = posOrdem.pop();
+                    no = posOrdem.poll();
                     subgrafo.add(no);
                     pilha.add(no);
                     no.visitado = true;
 
                     while (!pilha.isEmpty()) {
                         no = pilha.pop();
-                        for (Conexao<E> conexao : no.saida) {
+                        for (Conexao<E> conexao : no.entrada) {
                           
                             if (!conexao.no.visitado) {
                                 conexao.no.visitado = true;
